@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sonidos Relajantes</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            color: #fff;
+            background: url('background1.jpg') no-repeat center center fixed;
+            background-size: cover;
+            transition: background 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .reset-btn {
+            margin: 20px 0;
+            width: 60px;
+            height: 60px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .reset-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+
+        .reset-btn i {
+            font-size: 24px;
+        }
+
+        .sound-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sound {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sound-icon {
+            font-size: 48px;
+            color: rgba(0, 0, 0, 0.7);
+            transition: color 0.3s;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            color: #333;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background 0.3s, transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+
+        .volume-slider {
+            -webkit-appearance: none;
+            width: 80%;
+            max-width: 400px;
+            height: 8px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .volume-slider::-webkit-slider-thumb:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .volume-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .volume-slider::-moz-range-thumb:hover {
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .icon {
+            font-size: 24px;
+            color: rgba(0, 0, 0, 0.7);
+            transition: color 0.3s;
+        }
+
+        .icon.playing {
+            color: rgba(0, 0, 0, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Botón para detener todos los sonidos -->
+        <button class="reset-btn" onclick="resetAll()">
+            <i class="fas fa-stop"></i>
+        </button>
+
+        <div class="sound-controls">
+            <!-- Sonidos -->
+            <div class="sound" id="sound-rain">
+                <i class="fas fa-cloud-rain sound-icon"></i>
+                <span>Lluvia</span>
+                <button class="control-btn" onclick="toggleSound('rain')">
+                    <i class="icon" id="rain-icon">
+                        <i class="fas fa-play" id="rain-play"></i>
+                        <i class="fas fa-pause" id="rain-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="rain-volume" min="0" max="1" step="0.01" onchange="adjustVolume('rain', this.value)" />
+            </div>
+            <div class="sound" id="sound-waves">
+                <i class="fas fa-water sound-icon"></i>
+                <span>Olas</span>
+                <button class="control-btn" onclick="toggleSound('waves')">
+                    <i class="icon" id="waves-icon">
+                        <i class="fas fa-play" id="waves-play"></i>
+                        <i class="fas fa-pause" id="waves-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="waves-volume" min="0" max="1" step="0.01" onchange="adjustVolume('waves', this.value)" />
+            </div>
+            <div class="sound" id="sound-forest">
+                <i class="fas fa-tree sound-icon"></i>
+                <span>Bosque</span>
+                <button class="control-btn" onclick="toggleSound('forest')">
+                    <i class="icon" id="forest-icon">
+                        <i class="fas fa-play" id="forest-play"></i>
+                        <i class="fas fa-pause" id="forest-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="forest-volume" min="0" max="1" step="0.01" onchange="adjustVolume('forest', this.value)" />
+            </div>
+            <div class="sound" id="sound-fire">
+                <i class="fas fa-fire sound-icon"></i>
+                <span>Fuego</span>
+                <button class="control-btn" onclick="toggleSound('fire')">
+                    <i class="icon" id="fire-icon">
+                        <i class="fas fa-play" id="fire-play"></i>
+                        <i class="fas fa-pause" id="fire-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="fire-volume" min="0" max="1" step="0.01" onchange="adjustVolume('fire', this.value)" />
+            </div>
+            <div class="sound" id="sound-thunderstorm">
+                <i class="fas fa-bolt sound-icon"></i>
+                <span>Tormenta</span>
+                <button class="control-btn" onclick="toggleSound('thunderstorm')">
+                    <i class="icon" id="thunderstorm-icon">
+                        <i class="fas fa-play" id="thunderstorm-play"></i>
+                        <i class="fas fa-pause" id="thunderstorm-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="thunderstorm-volume" min="0" max="1" step="0.01" onchange="adjustVolume('thunderstorm', this.value)" />
+            </div>
+            <div class="sound" id="sound-waterfall">
+                <i class="fas fa-tint sound-icon"></i>
+                <span>Cascada</span>
+                <button class="control-btn" onclick="toggleSound('waterfall')">
+                    <i class="icon" id="waterfall-icon">
+                        <i class="fas fa-play" id="waterfall-play"></i>
+                        <i class="fas fa-pause" id="waterfall-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="waterfall-volume" min="0" max="1" step="0.01" onchange="adjustVolume('waterfall', this.value)" />
+            </div>
+            <div class="sound" id="sound-wind">
+                <i class="fas fa-wind sound-icon"></i>
+                <span>Viento</span>
+                <button class="control-btn" onclick="toggleSound('wind')">
+                    <i class="icon" id="wind-icon">
+                        <i class="fas fa-play" id="wind-play"></i>
+                        <i class="fas fa-pause" id="wind-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="wind-volume" min="0" max="1" step="0.01" onchange="adjustVolume('wind', this.value)" />
+            </div>
+            <div class="sound" id="sound-crickets">
+                <i class="fas fa-bug sound-icon"></i> <!-- Reemplazar con el icono más adecuado para grillos -->
+                <span>Grillos</span>
+                <button class="control-btn" onclick="toggleSound('crickets')">
+                    <i class="icon" id="crickets-icon">
+                        <i class="fas fa-play" id="crickets-play"></i>
+                        <i class="fas fa-pause" id="crickets-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="crickets-volume" min="0" max="1" step="0.01" onchange="adjustVolume('crickets', this.value)" />
+            </div>
+            <div class="sound" id="sound-ambiance">
+                <i class="fas fa-volume-up sound-icon"></i>
+                <span>Ambiente</span>
+                <button class="control-btn" onclick="toggleSound('ambiance')">
+                    <i class="icon" id="ambiance-icon">
+                        <i class="fas fa-play" id="ambiance-play"></i>
+                        <i class="fas fa-pause" id="ambiance-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="ambiance-volume" min="0" max="1" step="0.01" onchange="adjustVolume('ambiance', this.value)" />
+            </div>
+            <div class="sound" id="sound-river">
+                <i class="fas fa-water sound-icon"></i>
+                <span>Río</span>
+                <button class="control-btn" onclick="toggleSound('river')">
+                    <i class="icon" id="river-icon">
+                        <i class="fas fa-play" id="river-play"></i>
+                        <i class="fas fa-pause" id="river-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="river-volume" min="0" max="1" step="0.01" onchange="adjustVolume('river', this.value)" />
+            </div>
+            <div class="sound" id="sound-snow">
+                <i class="fas fa-snowflake sound-icon"></i>
+                <span>Nieve</span>
+                <button class="control-btn" onclick="toggleSound('snow')">
+                    <i class="icon" id="snow-icon">
+                        <i class="fas fa-play" id="snow-play"></i>
+                        <i class="fas fa-pause" id="snow-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="snow-volume" min="0" max="1" step="0.01" onchange="adjustVolume('snow', this.value)" />
+            </div>
+            <div class="sound" id="sound-birds">
+                <i class="fas fa-dove sound-icon"></i> <!-- Reemplazar con el icono más adecuado para pájaros -->
+                <span>Pájaros</span>
+                <button class="control-btn" onclick="toggleSound('birds')">
+                    <i class="icon" id="birds-icon">
+                        <i class="fas fa-play" id="birds-play"></i>
+                        <i class="fas fa-pause" id="birds-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="birds-volume" min="0" max="1" step="0.01" onchange="adjustVolume('birds', this.value)" />
+            </div>
+            <div class="sound" id="sound-morning">
+                <i class="fas fa-sun sound-icon"></i>
+                <span>Amanece</span>
+                <button class="control-btn" onclick="toggleSound('morning')">
+                    <i class="icon" id="morning-icon">
+                        <i class="fas fa-play" id="morning-play"></i>
+                        <i class="fas fa-pause" id="morning-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="morning-volume" min="0" max="1" step="0.01" onchange="adjustVolume('morning', this.value)" />
+            </div>
+            <div class="sound" id="sound-crashing">
+                <i class="fas fa-ship sound-icon"></i>
+                <span>Olas Rompientes</span>
+                <button class="control-btn" onclick="toggleSound('crashing')">
+                    <i class="icon" id="crashing-icon">
+                        <i class="fas fa-play" id="crashing-play"></i>
+                        <i class="fas fa-pause" id="crashing-pause" style="display:none;"></i>
+                    </i>
+                </button>
+                <input type="range" class="volume-slider" id="crashing-volume" min="0" max="1" step="0.01" onchange="adjustVolume('crashing', this.value)" />
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Definir los sonidos
+        const sounds = {
+            rain: new Audio('rain.mp3'),
+            waves: new Audio('waves.mp3'),
+            forest: new Audio('forest.mp3'),
+            fire: new Audio('fire.mp3'),
+            thunderstorm: new Audio('thunderstorm.mp3'),
+            waterfall: new Audio('waterfall.mp3'),
+            wind: new Audio('wind.mp3'),
+            crickets: new Audio('crickets.mp3'),
+            ambiance: new Audio('ambiance.mp3'),
+            river: new Audio('river.mp3'),
+            snow: new Audio('snow.mp3'),
+            birds: new Audio('birds.mp3'),
+            morning: new Audio('morning.mp3'),
+            crashing: new Audio('crashing.mp3'),
+        };
+
+        // Configurar los sonidos para que se reproduzcan en bucle
+        Object.values(sounds).forEach(sound => sound.loop = true);
+
+        // Función para reproducir o pausar un sonido
+        function toggleSound(soundName) {
+            const sound = sounds[soundName];
+            const playIcon = document.getElementById(`${soundName}-play`);
+            const pauseIcon = document.getElementById(`${soundName}-pause`);
+            const icon = document.getElementById(`${soundName}-icon`);
+
+            if (sound.paused) {
+                sound.play().catch(error => console.error('Error al reproducir el sonido:', error));
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+                icon.classList.add('playing');
+            } else {
+                sound.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+                icon.classList.remove('playing');
+            }
+        }
+
+        // Función para ajustar el volumen
+        function adjustVolume(soundName, volume) {
+            sounds[soundName].volume = volume;
+        }
+
+        // Cambiar fondo de pantalla aleatoriamente
+        function changeBackground() {
+            const backgrounds = [
+                'background1.jpg',
+                'background2.jpg',
+                'background3.jpg',
+                'background4.jpg',
+                'background5.jpg',
+                'background6.jpg',
+                'background7.jpg',
+                'background8.jpg',
+                'background9.jpg',
+                'background10.jpg'
+            ];
+            const randomIndex = Math.floor(Math.random() * backgrounds.length);
+            document.body.style.backgroundImage = `url('${backgrounds[randomIndex]}')`;
+        }
+
+        // Cambiar fondo cada 30 segundos
+        setInterval(changeBackground, 30000);
+
+        // Inicializar volumen
+        Object.keys(sounds).forEach(soundName => {
+            document.getElementById(`${soundName}-volume`).value = 0.5;
+            sounds[soundName].volume = 0.5;
+        });
+
+        // Función para detener todos los sonidos y reiniciar la página
+        function resetAll() {
+            Object.keys(sounds).forEach(soundName => {
+                const sound = sounds[soundName];
+                sound.pause();
+                sound.currentTime = 0;
+                document.getElementById(`${soundName}-play`).style.display = 'block';
+                document.getElementById(`${soundName}-pause`).style.display = 'none';
+                document.getElementById(`${soundName}-icon`).classList.remove('playing');
+            });
+        }
+    </script>
+<script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then((registration) => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
