@@ -148,6 +148,33 @@
         .icon.playing {
             color: rgba(0, 0, 0, 1);
         }
+
+/* Estilos para el Banner de Ko-fi */
+.kofi-banner {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.kofi-banner a {
+    text-decoration: none;
+    color: #333;
+}
+
+.kofi-banner img {
+    display: block;
+}
+
+        
     </style>
 </head>
 <body>
@@ -415,5 +442,12 @@
             });
         }
     </script>
+<!-- Banner de Donación de Ko-fi -->
+<div id="kofi-banner" class="kofi-banner">
+    <a href="https://ko-fi.com/juanbeapps" target="_blank" title="Apóyame en Ko-fi">
+        <img src="https://storage.ko-fi.com/cdn/ko-fi1.png" alt="Ko-fi Banner" style="width: 120px; height: auto;">
+    </a>
+</div>
+    
 </body>
 </html>
